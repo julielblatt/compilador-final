@@ -1,8 +1,8 @@
 import re
 
-# Adicione 'func' às palavras-chave
+
 token_specification = [
-    ('KEYWORD', r'\b(if|else|while|for|return|func|int)\b'),  # adicionado 'else'
+    ('KEYWORD', r'\b(if|else|while|for|return|func|int)\b'), 
     ('NUMBER', r'\b\d+\b'),
     ('ID', r'\b[a-zA-Z_][a-zA-Z_0-9]*\b'),
     ('OP', r'(==|!=|<=|>=|&&|\|\||[+\-*/=<>%])'),
