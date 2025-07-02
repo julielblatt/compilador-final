@@ -3,7 +3,7 @@ class ContextoSemantico:
         self.escopos = [{}]
         self.erros = []
         self.funcoes = {}
-        self.escopo_nomes = ["global"]  # Nome do escopo atual
+        self.escopo_nomes = ["global"]  
 
     def entrar_escopo(self, nome):
         self.escopos.append({})
@@ -26,7 +26,7 @@ class ContextoSemantico:
             self.erros.append(f"Função '{nome}' chamada com {qtd_args} argumento(s), mas espera {self.funcoes[nome]}.")
 
     def foi_declarado(self, nome):
-        # Procura do escopo mais interno para o mais externo
+        
         for escopo in reversed(self.escopos):
             if nome in escopo:
                 return True
