@@ -17,7 +17,7 @@ class ContextoAssembly:
         self.vars.add(nome)
 
     def novo_reg(self):
-        reg = f"t{self.reg_count % 7}"  # t0-t6 são temporários em RISC-V
+        reg = f"t{self.reg_count % 7}"  
         self.reg_count += 1
         return reg
 
