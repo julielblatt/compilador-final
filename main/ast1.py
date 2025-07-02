@@ -58,10 +58,7 @@ class ReturnNode(ASTNode):
     def gerar_assembly(self, contexto):
         val = self.value.gerar_assembly(contexto)
         contexto.emit(f"mv a0, {val}")
-        # Para imprimir (opcional):
-        # contexto.emit("li a7, 1")
-        # contexto.emit("ecall")
-        # Para finalizar (no main, deixe só o return final do programa)
+        
 
     def verificar_semantica(self, contexto):
         self.value.verificar_semantica(contexto)
@@ -119,7 +116,7 @@ class BinOpNode(ASTNode):
             contexto.emit(f"or {dest}, {l}, {r}")
         else:
             contexto.emit(f"# Operador não suportado: {self.op}")
-        return dest  # Nunca emita linha só com o registrador!
+        return dest  
 
     def verificar_semantica(self, contexto):
         self.left.verificar_semantica(contexto)
@@ -140,7 +137,7 @@ class NumberNode(ASTNode):
         return reg
 
     def verificar_semantica(self, contexto):
-        pass  # Número é sempre válido
+        pass  
 
 
 class VariableNode(ASTNode):
@@ -177,7 +174,7 @@ class FuncDeclNode(ASTNode):
 
     def gerar_assembly(self, contexto):
         contexto.emit(f"{self.name}:")
-        # Parâmetros: a0, a1, ...
+       
         for i, param in enumerate(self.params):
             contexto.declarar_var(param)
             addr_reg = contexto.novo_reg()
@@ -192,7 +189,7 @@ class FuncDeclNode(ASTNode):
         contexto.entrar_escopo(self.name)
         for param in self.params:
             contexto.declarar(param)
-        for cmd in self.body.comandos:  # <-- Corrigido aqui
+        for cmd in self.body.comandos:  
             cmd.verificar_semantica(contexto)
         contexto.sair_escopo()
 
@@ -209,13 +206,13 @@ class FuncCallNode(ASTNode):
         return temp
 
     def gerar_assembly(self, contexto):
-        # Avalia argumentos e move para a0, a1, ...
+        
         arg_regs = ['a0', 'a1', 'a2', 'a3', 'a4', 'a5', 'a6', 'a7']
         for i, arg in enumerate(self.args):
             val = arg.gerar_assembly(contexto)
             contexto.emit(f"mv {arg_regs[i]}, {val}")
-        contexto.emit(f"call {self.name}")  # Chamada correta em RISC-V
-        # O valor de retorno estará em a0
+        contexto.emit(f"call {self.name}")  
+       
         dest = contexto.novo_reg()
         contexto.emit(f"mv {dest}, a0")
         return dest
@@ -302,10 +299,10 @@ class WhileNode(ASTNode):
 
 class ForNode(ASTNode):
     def __init__(self, init, cond, inc, body):
-        self.init = init      # atribuição inicial (ex: i = 0)
-        self.cond = cond      # condição (ex: i < 10)
-        self.inc = inc        # incremento (ex: i = i + 1)
-        self.body = body      # lista de comandos
+        self.init = init      
+        self.cond = cond      
+        self.inc = inc        
+        self.body = body      
 
     def gerar_assembly(self, contexto):
         if self.init:
@@ -356,7 +353,7 @@ class UnaryOpNode(ASTNode):
         val = self.expr.gerar_assembly(contexto)
         dest = contexto.novo_reg()
         if self.op == '!':
-            contexto.emit(f"seqz {dest}, {val}")  # RISC-V: dest = (val == 0)
+            contexto.emit(f"seqz {dest}, {val}")  
         else:
             contexto.emit(f"# Operador unário não suportado: {self.op}")
         return dest
@@ -383,7 +380,7 @@ class ContextoAssembly:
         self.vars.add(nome)
 
     def novo_reg(self):
-        reg = f"t{self.reg_count % 7}"  # t0-t6 são temporários em RISC-V
+        reg = f"t{self.reg_count % 7}"  
         self.reg_count += 1
         return reg
 
