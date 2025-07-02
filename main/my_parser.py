@@ -38,7 +38,7 @@ class Parser:
         tipo, val = self.token_atual()
 
         if tipo == 'KEYWORD' and val == 'int':
-            # Verifica se é declaração de função no estilo C
+            
             if self.tokens[self.pos + 1][0] == 'ID' and self.tokens[self.pos + 2][1] == '(':
                 self.consumir('KEYWORD')  # consome 'int'
                 nome = self.consumir('ID')
@@ -47,21 +47,21 @@ class Parser:
                 self.consumir('SYMBOL')  # )
                 body = self.bloco()
                 return FuncDeclNode(nome, params, body)
-            # Caso contrário, trata como declaração de variável
-            self.consumir('KEYWORD')  # consome 'int'
+           
+            self.consumir('KEYWORD')  
             vars = []
             while True:
                 nome = self.consumir('ID')
                 valor = None
                 if self.token_atual()[0] == 'OP' and self.token_atual()[1] == '=':
-                    self.consumir('OP')  # consome '='
+                    self.consumir('OP')  
                     valor = self.exp()
                 vars.append((nome, valor))
                 if self.token_atual()[1] == ',':
                     self.consumir('SYMBOL')
                 else:
                     break
-            self.consumir('SYMBOL')  # consome ';'
+            self.consumir('SYMBOL')  
             return DeclVarNode(vars)
 
         if val == 'return':
@@ -116,7 +116,7 @@ class Parser:
             if lookahead == '(':
                 func_call = self.factor()
                 self.consumir('SYMBOL')  # ;
-                return func_call  # Chamadas são expressões e comandos aqui
+                return func_call  
             else:
                 atrib = self.atribuicao()
                 self.consumir('SYMBOL')  # ;
@@ -213,7 +213,7 @@ class Parser:
     def param_list(self):
         params = []
         while True:
-            # Aceita e ignora o tipo 'int' antes do nome do parâmetro
+            
             if self.token_atual()[0] == 'KEYWORD' and self.token_atual()[1] == 'int':
                 self.consumir('KEYWORD')
             if self.token_atual()[0] == 'ID':
@@ -237,7 +237,7 @@ class Parser:
 
 class DeclVarNode(ASTNode):
     def __init__(self, vars):
-        self.vars = vars  # lista de (nome, valor)
+        self.vars = vars  
 
     def gerar_assembly(self, contexto):
         for nome, valor in self.vars:
